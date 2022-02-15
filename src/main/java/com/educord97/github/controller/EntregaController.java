@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.educord97.github.domain.model.Entrega;
 import com.educord97.github.domain.repository.EntregaRepository;
+import com.educord97.github.domain.service.FinalizacaoEntregaService;
 import com.educord97.github.domain.service.SolicitacaoEntregaService;
 import com.educord97.github.mapper.assembler.EntregaMapperAssembler;
 import com.educord97.github.model.dto.EntregaDTO;
@@ -28,6 +30,7 @@ public class EntregaController {
 	
 	private EntregaRepository entregaRepository;
 	private SolicitacaoEntregaService solicitacaoEntregaService;
+	private FinalizacaoEntregaService finalizacaoEntregaService;
 	private EntregaMapperAssembler entregaMapperAssembler;
 	
 	@PostMapping
@@ -37,6 +40,12 @@ public class EntregaController {
 		Entrega entregaSolicitada = solicitacaoEntregaService.solicitar(novaEntrega);
 		
 		return entregaMapperAssembler.toDTO(entregaSolicitada);
+	}
+	
+	@PutMapping("/{entregaId}/finalizacao")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void finalizar(@PathVariable Long entregaId) {
+		finalizacaoEntregaService.finalizar(entregaId);
 	}
 	
 	@GetMapping
